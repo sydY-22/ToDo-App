@@ -51,7 +51,28 @@ class ToDo:
         print()
     
     def delete_todo(self):
+        """Delete a todo from the list."""
+        self.list_todo()
+
+        remove_todo = input("Enter a 'title' of todo to delete: ")
+
+        with open("todo-list.json", "r", encoding="utf-8") as data:
+            file_json = json.load(data)
         
+        todos = list(file_json.values())
+        title_todos_ls = [i["Title"] for i in todos]
+
+        if remove_todo not in title_todos_ls:
+            return print(f"{remove_todo} NOT in todo list!")
+        else:
+            for k, v in list(file_json.items()):
+                if v["Title"] == remove_todo:
+                    print(f"Deleting: {file_json[k]}")
+                    del file_json[k]
+
+            with open("todo-list.json", "w", encoding="utf-8") as data:
+                json.dump(file_json, data, indent=4)
+        print()
 
     def menu(self):
         """Display menu options."""
@@ -75,12 +96,11 @@ def main():
         elif prompt == '2':
             test.create_todo()
         elif prompt == '3':
-            print('delete')
+            test.delete_todo()
         else:
-            False
+            return False
         
     
-
 
 if __name__ == "__main__":
     main()
