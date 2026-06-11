@@ -5,10 +5,6 @@ from tkinter import messagebox
 
 class ToDo:
 
-    window = tk.Tk()
-    window.title("Welcome to ToDo App!: ")
-    #window.geometry('1000x850')
-
     def check_file(self):
         """Checks if data exists. if not create data."""
         file_path = Path("todo-list.json")
@@ -46,12 +42,13 @@ class ToDo:
     
     def list_todo(self):
         """List all todos."""
-        print("List of ToDo's: ")
+        print("List of ToDo's...")
 
         with open("todo-list.json", "r", encoding="utf-8") as data:
             file_json = json.load(data)
         
         for value in file_json.values():
+            # self.listbox.insert(tk.END, f"{value["Title"]} - {value["Description"]}")
             print(f"Title: {value["Title"]} - Description: {value["Description"]}")
         
         print()
@@ -86,22 +83,12 @@ class ToDo:
         print("2. Create ToDo")
         print("3. Delete ToDo")
         print("4. Exit!")
+    
+    window = tk.Tk()
+    window.title("Welcome to ToDo App!: ")
 
-
-
-def main():
-    test = ToDo()
-    test.check_file()
-
-    # canvas = tk.Canvas(width=400, height=400)
-    # canvas.grid(column=1, row=1)
-
-    # welcome text:
-    welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("bold", 35))
-    welcome_label.grid(column=1, row=0)
-
-    # display list:
-    listbox = tk.Listbox(test.window)
+     # display list:
+    listbox = tk.Listbox(window)
     listbox.grid(column=1, row=2, rowspan=1, pady=5)
 
     # add title label and entry:
@@ -119,20 +106,33 @@ def main():
     description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
 
     # add title and description for todo button:
-    add_todo_button = tk.Button(text="Add ToDo!", command=test.list_todo, font=("bold", 16))
+    add_todo_button = tk.Button(text="Add ToDo!", command=list_todo, font=("bold", 16))
     add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
 
     # delete by 'title' label and entry:
-    delete_label = tk.Label(test.window, text="Delete by Title: ", font=("bold", 14))
+    delete_label = tk.Label(window, text="Delete by Title: ", font=("bold", 14))
     delete_label.grid(column=0, row=6, columnspan=2, rowspan=1, pady=5, sticky="w")
 
-    delete_entry = tk.Entry(test.window, width=45)
+    delete_entry = tk.Entry(window, width=45)
     delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
 
     # delete todo button:
-    delete_button = tk.Button(text="Delete ToDo!", font=("bold", 14))
+    delete_button = tk.Button(text="Delete ToDo!", command= list_todo, font=("bold", 14))
     delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
+    #window.geometry('1000x850')
 
+
+
+def main():
+    test = ToDo()
+    test.check_file()
+
+    # canvas = tk.Canvas(width=400, height=400)
+    # canvas.grid(column=1, row=1)
+
+    # welcome text:
+    welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("bold", 35))
+    welcome_label.grid(column=1, row=0)
 
     test.window.mainloop()
 
