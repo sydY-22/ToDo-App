@@ -48,7 +48,7 @@ class ToDo:
             file_json = json.load(data)
         
         for value in file_json.values():
-            # self.listbox.insert(tk.END, f"{value["Title"]} - {value["Description"]}")
+            self.listbox.insert(tk.END, f"• {value["Title"]} - {value["Description"]}")
             print(f"Title: {value["Title"]} - Description: {value["Description"]}")
         
         print()
@@ -88,7 +88,7 @@ class ToDo:
     window.title("Welcome to ToDo App!: ")
 
      # display list:
-    listbox = tk.Listbox(window)
+    listbox = tk.Listbox(window, font=("bold", 12), width=50)
     listbox.grid(column=1, row=2, rowspan=1, pady=5)
 
     # add title label and entry:
@@ -133,6 +133,8 @@ def main():
     # welcome text:
     welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("bold", 35))
     welcome_label.grid(column=1, row=0)
+
+    test.list_todo()
 
     test.window.mainloop()
 
