@@ -1,7 +1,13 @@
 from pathlib import Path
 import json
+import tkinter as tk
+from tkinter import messagebox
 
 class ToDo:
+
+    window = tk.Tk()
+    window.title("Welcome to ToDo App!: ")
+    #window.geometry('1000x850')
 
     def check_file(self):
         """Checks if data exists. if not create data."""
@@ -87,17 +93,62 @@ def main():
     test = ToDo()
     test.check_file()
 
-    while True:
-        test.menu()
-        prompt = input("Choose between options 1-4: ")
+    # canvas = tk.Canvas(width=400, height=400)
+    # canvas.grid(column=1, row=1)
 
-        if prompt == '1':
-            test.list_todo()
-        elif prompt == '2':
-            test.create_todo()
-        elif prompt == '3':
-            test.delete_todo()
-        else:
-            return False
+    # welcome text:
+    welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("bold", 35))
+    welcome_label.grid(column=1, row=0)
+
+    # display list:
+    listbox = tk.Listbox(test.window)
+    listbox.grid(column=1, row=2, rowspan=1, pady=5)
+
+    # add title label and entry:
+    title_label = tk.Label(text="Add Title: ", font=("bold", 14))
+    title_label.grid(column=0, row=3, rowspan=1)
+
+    title_entry = tk.Entry(width=45)
+    title_entry.grid(column=1, row=3, columnspan=1, rowspan=1, pady=5) # pady
+
+    # add description label and entry:
+    description_label = tk.Label(text="Add Description: ", font=("bold", 14))
+    description_label.grid(column=0, row=4, rowspan=1)
+
+    description_entry = tk.Entry(width=45)
+    description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
+
+    # add title and description for todo button:
+    add_todo_button = tk.Button(text="Add ToDo!", command=test.list_todo, font=("bold", 16))
+    add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
+
+    # delete by 'title' label and entry:
+    delete_label = tk.Label(test.window, text="Delete by Title: ", font=("bold", 14))
+    delete_label.grid(column=0, row=6, columnspan=2, rowspan=1, pady=5, sticky="w")
+
+    delete_entry = tk.Entry(test.window, width=45)
+    delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
+
+    # delete todo button:
+    delete_button = tk.Button(text="Delete ToDo!", font=("bold", 14))
+    delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
+
+
+    test.window.mainloop()
+
+
+
+    # while True:
+    #     test.menu()
+    #     prompt = input("Choose between options 1-4: ")
+
+    #     if prompt == '1':
+    #         test.list_todo()
+    #     elif prompt == '2':
+    #         test.create_todo()
+    #     elif prompt == '3':
+    #         test.delete_todo()
+    #     else:
+    #         return False
         
 
