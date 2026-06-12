@@ -20,8 +20,6 @@ class ToDo:
     
     def create_todo(self):
         """Creates the todo."""
-        # add_title = input("Please enter a title for the todo: ")
-        # add_description = input("Please enter a description for the todo: ")
 
         new_todo = {}
         new_todo["Title"] = self.title_entry.get()
@@ -57,9 +55,9 @@ class ToDo:
     
     def delete_todo(self):
         """Delete a todo from the list."""
-        # self.list_todo()
 
-        remove_todo = input("Enter a 'title' of todo to delete: ")
+        remove_todo = self.delete_entry.get()
+        all_items = self.listbox.get(0, tk.END)
 
         with open("todo-list.json", "r", encoding="utf-8") as data:
             file_json = json.load(data)
@@ -73,6 +71,8 @@ class ToDo:
             for k, v in list(file_json.items()):
                 if v["Title"] == remove_todo:
                     print(f"Deleting: {file_json[k]}")
+                    index = all_items.index(f"• {file_json[k]["Title"]} - {file_json[k]["Description"]}")
+                    self.listbox.delete(index)
                     del file_json[k]
 
             with open("todo-list.json", "w", encoding="utf-8") as data:
@@ -107,10 +107,6 @@ class ToDo:
     description_entry = tk.Entry(width=45)
     description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
 
-    # # add title and description for todo button:
-    # add_todo_button = tk.Button(text="Add ToDo!", command=create_todo, font=("bold", 16))
-    # add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
-
     # delete by 'title' label and entry:
     delete_label = tk.Label(window, text="Delete by Title: ", font=("bold", 14))
     delete_label.grid(column=0, row=6, columnspan=2, rowspan=1, pady=5, sticky="w")
@@ -118,9 +114,6 @@ class ToDo:
     delete_entry = tk.Entry(window, width=45)
     delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
 
-    # delete todo button:
-    delete_button = tk.Button(text="Delete ToDo!", command=list_todo, font=("bold", 14))
-    delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
     #window.geometry('1000x850')
 
 
@@ -142,21 +135,11 @@ def main():
     add_todo_button = tk.Button(text="Add ToDo!", command=test.create_todo, font=("bold", 16))
     add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
 
+    # delete todo button:
+    delete_button = tk.Button(text="Delete ToDo!", command=test.delete_todo, font=("bold", 14))
+    delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
+
     test.window.mainloop()
 
-
-
-    # while True:
-    #     test.menu()
-    #     prompt = input("Choose between options 1-4: ")
-
-    #     if prompt == '1':
-    #         test.list_todo()
-    #     elif prompt == '2':
-    #         test.create_todo()
-    #     elif prompt == '3':
-    #         test.delete_todo()
-    #     else:
-    #         return False
         
 
