@@ -20,12 +20,12 @@ class ToDo:
     
     def create_todo(self):
         """Creates the todo."""
-        add_title = input("Please enter a title for the todo: ")
-        add_description = input("Please enter a description for the todo: ")
+        # add_title = input("Please enter a title for the todo: ")
+        # add_description = input("Please enter a description for the todo: ")
 
         new_todo = {}
-        new_todo["Title"] = add_title
-        new_todo["Description"] = add_description
+        new_todo["Title"] = self.title_entry.get()
+        new_todo["Description"] = self.description_entry.get()
 
         with open("todo-list.json", "r", encoding="utf-8") as data:
             file_json = json.load(data)
@@ -36,8 +36,10 @@ class ToDo:
 
         with open("todo-list.json", "w", encoding="utf-8") as data:
             json.dump(file_json, data, indent=4)
+
         
-        print(f"ToDo Added!: {new_todo["Title"]} -  {new_todo['Description']}")
+        self.listbox.insert(tk.END, f"• {new_todo["Title"]} - {new_todo["Description"]}")
+        print(f"ToDo Added!: {new_todo["Title"]} -  {new_todo["Description"]}")
         print()
     
     def list_todo(self):
@@ -55,7 +57,7 @@ class ToDo:
     
     def delete_todo(self):
         """Delete a todo from the list."""
-        self.list_todo()
+        # self.list_todo()
 
         remove_todo = input("Enter a 'title' of todo to delete: ")
 
@@ -105,9 +107,9 @@ class ToDo:
     description_entry = tk.Entry(width=45)
     description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
 
-    # add title and description for todo button:
-    add_todo_button = tk.Button(text="Add ToDo!", command=list_todo, font=("bold", 16))
-    add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
+    # # add title and description for todo button:
+    # add_todo_button = tk.Button(text="Add ToDo!", command=create_todo, font=("bold", 16))
+    # add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
 
     # delete by 'title' label and entry:
     delete_label = tk.Label(window, text="Delete by Title: ", font=("bold", 14))
@@ -117,7 +119,7 @@ class ToDo:
     delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
 
     # delete todo button:
-    delete_button = tk.Button(text="Delete ToDo!", command= list_todo, font=("bold", 14))
+    delete_button = tk.Button(text="Delete ToDo!", command=list_todo, font=("bold", 14))
     delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
     #window.geometry('1000x850')
 
@@ -135,6 +137,10 @@ def main():
     welcome_label.grid(column=1, row=0)
 
     test.list_todo()
+
+    # add title and description for todo button:
+    add_todo_button = tk.Button(text="Add ToDo!", command=test.create_todo, font=("bold", 16))
+    add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
 
     test.window.mainloop()
 
