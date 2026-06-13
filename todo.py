@@ -3,6 +3,11 @@ import json
 import tkinter as tk
 from tkinter import messagebox
 
+RED = "#F7374F"
+MAROON = "#88304E"
+PURPLE = "#522546"
+BLACK_COLOR = "#2C2C2C"
+
 class ToDo:
 
     def check_file(self):
@@ -28,16 +33,23 @@ class ToDo:
         with open("todo-list.json", "r", encoding="utf-8") as data:
             file_json = json.load(data)
         
-        total_todos = len(file_json)
+        if file_json:
+            total_todos = int(next(reversed(file_json))) # gets the last id value
+            file_json[total_todos+1] = new_todo   
+        else:
+            # Calculate the next ID dynamically
+            next_id = str(max([int(k) for k in file_json.keys()] + [0]) + 1)
+            # Assign the new todo
+            file_json[next_id] = new_todo
 
-        file_json[total_todos+1] = new_todo
-
-        with open("todo-list.json", "w", encoding="utf-8") as data:
-            json.dump(file_json, data, indent=4)
-
-        
         self.listbox.insert(tk.END, f"• {new_todo["Title"]} - {new_todo["Description"]}")
         print(f"ToDo Added!: {new_todo["Title"]} -  {new_todo["Description"]}")
+        self.title_entry.delete(0, tk.END) # clears the entry field
+        self.description_entry.delete(0, tk.END)       
+
+        with open("todo-list.json", "w", encoding="utf-8") as data:
+            json.dump(file_json, data, indent=4) 
+
         print()
     
     def list_todo(self):
@@ -77,6 +89,8 @@ class ToDo:
 
             with open("todo-list.json", "w", encoding="utf-8") as data:
                 json.dump(file_json, data, indent=4)
+            
+        self.delete_entry.delete(0, tk.END) # clears the entry field
         print()
 
     def menu(self):
@@ -88,33 +102,33 @@ class ToDo:
     
     window = tk.Tk()
     window.title("Welcome to ToDo App!: ")
+    window.config(bg=BLACK_COLOR)
 
      # display list:
-    listbox = tk.Listbox(window, font=("bold", 12), width=50)
+    listbox = tk.Listbox(window, font=("Helvetica", 12, "bold"), width=50, bg=BLACK_COLOR, fg=RED)
     listbox.grid(column=1, row=2, rowspan=1, pady=5)
 
     # add title label and entry:
-    title_label = tk.Label(text="Add Title: ", font=("bold", 14))
+    title_label = tk.Label(text="Add Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
     title_label.grid(column=0, row=3, rowspan=1)
 
     title_entry = tk.Entry(width=45)
     title_entry.grid(column=1, row=3, columnspan=1, rowspan=1, pady=5) # pady
 
     # add description label and entry:
-    description_label = tk.Label(text="Add Description: ", font=("bold", 14))
+    description_label = tk.Label(text="Add Description: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
     description_label.grid(column=0, row=4, rowspan=1)
 
     description_entry = tk.Entry(width=45)
     description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
 
     # delete by 'title' label and entry:
-    delete_label = tk.Label(window, text="Delete by Title: ", font=("bold", 14))
+    delete_label = tk.Label(window, text="Delete by Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
     delete_label.grid(column=0, row=6, columnspan=2, rowspan=1, pady=5, sticky="w")
 
     delete_entry = tk.Entry(window, width=45)
     delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
 
-    #window.geometry('1000x850')
 
 
 
@@ -122,21 +136,21 @@ def main():
     test = ToDo()
     test.check_file()
 
-    # canvas = tk.Canvas(width=400, height=400)
-    # canvas.grid(column=1, row=1)
+    app_icon = tk.PhotoImage(file="todo-icon-2.png")
+    test.window.iconphoto(False, app_icon)
 
     # welcome text:
-    welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("bold", 35))
+    welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("Helvetica", 35, "bold"), fg=PURPLE, bg=BLACK_COLOR)
     welcome_label.grid(column=1, row=0)
 
     test.list_todo()
 
     # add title and description for todo button:
-    add_todo_button = tk.Button(text="Add ToDo!", command=test.create_todo, font=("bold", 16))
+    add_todo_button = tk.Button(text="Add ToDo!", command=test.create_todo, font=("Helvetica", 14, "bold"), fg=MAROON, bg=PURPLE)
     add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
 
     # delete todo button:
-    delete_button = tk.Button(text="Delete ToDo!", command=test.delete_todo, font=("bold", 14))
+    delete_button = tk.Button(text="Delete ToDo!", command=test.delete_todo, font=("Helvetica", 14, "bold"), fg=MAROON, bg=PURPLE)
     delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
 
     test.window.mainloop()
