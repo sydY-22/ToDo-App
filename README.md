@@ -10,5 +10,6 @@ Is to help increase productivity, organizing and completing daily goals.
 - Small formed app with simple user interface (tkinter).
 
 # Demo:
-![ToDo Demo!]("images/todo-gif-2.gif")
+![ToDo Demo](images/todo-gif-2.gif)
+
 
