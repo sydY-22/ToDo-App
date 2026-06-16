@@ -136,7 +136,7 @@ def main():
     test = ToDo()
     test.check_file()
 
-    app_icon = tk.PhotoImage(file="todo-icon-2.png")
+    app_icon = tk.PhotoImage(file="images/todo-icon-2.png")
     test.window.iconphoto(False, app_icon)
 
     # welcome text:
