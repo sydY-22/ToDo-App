@@ -8,7 +8,56 @@ MAROON = "#88304E"
 PURPLE = "#522546"
 BLACK_COLOR = "#2C2C2C"
 
-class ToDo:
+class ToDo(tk.Tk):
+
+    def __init__(self):
+        super().__init__()
+
+        # title of app:
+        self.title("Welcome to ToDo App!: ")
+        self.config(bg=BLACK_COLOR)
+
+        # app icon:
+        self.app_icon = tk.PhotoImage(file="images/todo-icon-2.png")
+        self.iconphoto(False, self.app_icon)
+
+        # welcome text:
+        self.welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("Helvetica", 35, "bold"), fg=PURPLE, bg=BLACK_COLOR)
+        self.welcome_label.grid(column=1, row=0)
+
+        # display list:
+        self.listbox = tk.Listbox(self, font=("Helvetica", 12, "bold"), width=50, bg=BLACK_COLOR, fg=RED)
+        self.listbox.grid(column=1, row=2, rowspan=1, pady=5)
+
+        # add title label and entry:
+        self.title_label = tk.Label(text="Add Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
+        self.title_label.grid(column=0, row=3, rowspan=1)
+
+        self.title_entry = tk.Entry(width=45)
+        self.title_entry.grid(column=1, row=3, columnspan=1, rowspan=1, pady=5) # pady
+
+        # add description label and entry:
+        self.description_label = tk.Label(text="Add Description: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
+        self.description_label.grid(column=0, row=4, rowspan=1)
+
+        self.description_entry = tk.Entry(width=45)
+        self.description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
+
+        # add title and description for todo button:
+        self.add_todo_button = tk.Button(text="Add ToDo!", command=self.create_todo, font=("Helvetica", 14, "bold"), fg=MAROON, bg=PURPLE)
+        self.add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
+
+        # delete todo button:
+        self.delete_button = tk.Button(text="Delete ToDo!", command=self.delete_todo, font=("Helvetica", 14, "bold"), fg=MAROON, bg=PURPLE)
+        self.delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
+
+        # delete by 'title' label and entry:
+        self.delete_label = tk.Label(self, text="Delete by Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
+        self.delete_label.grid(column=0, row=6, columnspan=2, rowspan=1, pady=5, sticky="w")
+
+        self.delete_entry = tk.Entry(self, width=45)
+        self.delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
+
 
     def check_file(self):
         """Checks if data exists. if not create data."""
@@ -99,35 +148,6 @@ class ToDo:
         print("2. Create ToDo")
         print("3. Delete ToDo")
         print("4. Exit!")
-    
-    window = tk.Tk()
-    window.title("Welcome to ToDo App!: ")
-    window.config(bg=BLACK_COLOR)
-
-     # display list:
-    listbox = tk.Listbox(window, font=("Helvetica", 12, "bold"), width=50, bg=BLACK_COLOR, fg=RED)
-    listbox.grid(column=1, row=2, rowspan=1, pady=5)
-
-    # add title label and entry:
-    title_label = tk.Label(text="Add Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
-    title_label.grid(column=0, row=3, rowspan=1)
-
-    title_entry = tk.Entry(width=45)
-    title_entry.grid(column=1, row=3, columnspan=1, rowspan=1, pady=5) # pady
-
-    # add description label and entry:
-    description_label = tk.Label(text="Add Description: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
-    description_label.grid(column=0, row=4, rowspan=1)
-
-    description_entry = tk.Entry(width=45)
-    description_entry.grid(column=1, row=4, columnspan=1, rowspan=1, pady=5) # pady
-
-    # delete by 'title' label and entry:
-    delete_label = tk.Label(window, text="Delete by Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
-    delete_label.grid(column=0, row=6, columnspan=2, rowspan=1, pady=5, sticky="w")
-
-    delete_entry = tk.Entry(window, width=45)
-    delete_entry.grid(column=1, row=6, columnspan=1, rowspan=1, pady=5)
 
 
 
@@ -135,25 +155,8 @@ class ToDo:
 def main():
     test = ToDo()
     test.check_file()
-
-    app_icon = tk.PhotoImage(file="images/todo-icon-2.png")
-    test.window.iconphoto(False, app_icon)
-
-    # welcome text:
-    welcome_label = tk.Label(text="Welcome to ToDo App!: ", font=("Helvetica", 35, "bold"), fg=PURPLE, bg=BLACK_COLOR)
-    welcome_label.grid(column=1, row=0)
-
     test.list_todo()
-
-    # add title and description for todo button:
-    add_todo_button = tk.Button(text="Add ToDo!", command=test.create_todo, font=("Helvetica", 14, "bold"), fg=MAROON, bg=PURPLE)
-    add_todo_button.grid(column=1, row=5, columnspan=1, rowspan=1, pady=5) # pady
-
-    # delete todo button:
-    delete_button = tk.Button(text="Delete ToDo!", command=test.delete_todo, font=("Helvetica", 14, "bold"), fg=MAROON, bg=PURPLE)
-    delete_button.grid(column=2, row=6, columnspan=1, rowspan=1, pady=5)
-
-    test.window.mainloop()
+    test.mainloop()
 
         
 
