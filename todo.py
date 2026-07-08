@@ -28,6 +28,7 @@ class ToDo(tk.Tk):
         # display list:
         self.listbox = tk.Listbox(self, font=("Helvetica", 12, "bold"), width=50, bg=BLACK_COLOR, fg=RED)
         self.listbox.grid(column=1, row=2, rowspan=1, pady=5)
+        self.listbox.bind('<<ListboxSelect>>', self.on_click)
 
         # add title label and entry:
         self.title_label = tk.Label(text="Add Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
@@ -141,6 +142,21 @@ class ToDo(tk.Tk):
             
         self.delete_entry.delete(0, tk.END) # clears the entry field
         print()
+
+    def on_click(self, event):
+        """Gets the selected item on click."""
+        widget = event.widget # get listbox widget emitting the event
+
+        # get clicked item index
+        selection = widget.curselection()
+
+        # check selection
+        if selection:
+            index = selection[0]
+            value = widget.get(index) # get string value
+
+            print(f"Index: {index} - Value: {value}")
+   
 
     def menu(self):
         """Display menu options."""
