@@ -143,6 +143,16 @@ class ToDo(tk.Tk):
         self.delete_entry.delete(0, tk.END) # clears the entry field
         print()
 
+    def show_confirmation(self):
+        """Display the yes/no message box."""
+        response = messagebox.askyesno("Confirmation", "Do you want to set a Reminder for Tomowrrow?") 
+
+        if response:
+            print("User Clicked Yes!")
+        else:
+            print("User Clicked No!")
+              
+
     def on_click(self, event):
         """Gets the selected item on click."""
         widget = event.widget # get listbox widget emitting the event
@@ -154,8 +164,10 @@ class ToDo(tk.Tk):
         if selection:
             index = selection[0]
             value = widget.get(index) # get string value
+            # value_ls = value.split("-")
 
             print(f"Index: {index} - Value: {value}")
+            self.show_confirmation()
    
 
     def menu(self):
