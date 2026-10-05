@@ -1,6 +1,9 @@
 # ToDo-App:
 create todo list app using json and tkinter.
 
+Run: pip install -r requirements.txt
+
+
 # Purpose:
 Is to help increase productivity, organizing and completing daily goals.
 
