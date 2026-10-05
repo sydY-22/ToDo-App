@@ -2,11 +2,26 @@ from pathlib import Path
 import json
 import tkinter as tk
 from tkinter import messagebox
+import os
+import base64
+import datetime
+from datetime import timedelta, datetime
+from email.mime.text import MIMEText
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 RED = "#F7374F"
 MAROON = "#88304E"
 PURPLE = "#522546"
 BLACK_COLOR = "#2C2C2C"
+
+#SCOPES = ['https://googleapis.com']
+
+SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 class ToDo(tk.Tk):
 
@@ -28,6 +43,7 @@ class ToDo(tk.Tk):
         # display list:
         self.listbox = tk.Listbox(self, font=("Helvetica", 12, "bold"), width=50, bg=BLACK_COLOR, fg=RED)
         self.listbox.grid(column=1, row=2, rowspan=1, pady=5)
+        self.listbox.bind('<<ListboxSelect>>', self.on_click)
 
         # add title label and entry:
         self.title_label = tk.Label(text="Add Title: ", font=("Helvetica", 16, "bold"), bg=BLACK_COLOR, fg=PURPLE)
@@ -141,6 +157,101 @@ class ToDo(tk.Tk):
             
         self.delete_entry.delete(0, tk.END) # clears the entry field
         print()
+    
+    def get_gmail_service(self):
+        """Gets the authorized Gmail API service."""
+        creds = None
+
+        # stores user's access and refresh tokens
+        if os.path.exists('token.json'):
+            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        
+        # no valid credentials let user login
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    'credentials.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+                # save creds for the next run
+                with open('token.json', 'w') as token:
+                    token.write(creds.to_json())
+        return build('gmail', 'v1', credentials=creds)
+
+    def show_confirmation(self, todo_text):
+        """Display the yes/no message box."""
+        response = messagebox.askyesno("Confirmation", 
+                                       f"Do you want to set a Reminder for Tomowrrow?: About {todo_text}") 
+
+        if response:
+            print("User Clicked Yes!")
+            return response
+        else:
+            print("User Clicked No!")
+            return response
+
+    def send_raw_email(self, to_email, subject, body):
+        """Creates and sends the email using Gmail API."""
+        try:
+            service = self.get_gmail_service()
+
+            # build MIME structure
+            message = MIMEText(body)
+            message['to'] = to_email
+            message['subject'] = subject
+
+            # requires base64url encoding of email byte string        
+            raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+            create_message = {'raw': raw_message}
+
+            # execute send command
+            send_operation = service.users().messages().send(userId="me", body=create_message).execute()
+            print(f"Message successfully sent! Message ID: {send_operation["id"]}")
+
+        except HttpError as error:
+            print(f"An error occurred: {error}")
+    
+    def schedule_reminder(self, to_email, subject, body):
+        """Schedule a time to send reminder."""
+        scheduler = BlockingScheduler()
+        current_time = datetime.now()
+
+        tomorrow = current_time + timedelta(days=1)
+
+        print(f"Scheduler active. Email queued for execution at: {tomorrow}!")
+        scheduler.add_job(self.send_raw_email, 
+                          'date', run_date=tomorrow, kwargs={'to_email': to_email, 'subject': subject, 'body': body})
+
+        # starts execution loop
+        scheduler.start()
+
+    def on_click(self, event):
+        """Gets the selected item on click."""
+        widget = event.widget # get listbox widget emitting the event
+
+        # get clicked item index
+        selection = widget.curselection()
+
+        # check if user selected a listbox item
+        if selection:
+            index = selection[0]
+            value = widget.get(index) # get string value
+            value_ls = value.split("-")
+            subject = f"Reminder!: {value_ls[0]}"
+            body = value_ls[1]
+            to_email = 'sbabb131@gmail.com'
+
+            print(f"Index: {index} - Value: {value}")
+
+            if self.show_confirmation(value):
+                print("Send Reminder!")
+                self.send_raw_email(to_email=to_email, subject=subject, body=body)
+                # self.schedule_reminder(to_email=to_email, subject=subject, body=body)
+                # print(self.get_gmail_service)
+            else:
+                print("Do NOT send Reminder!")
+   
 
     def menu(self):
         """Display menu options."""
@@ -151,7 +262,6 @@ class ToDo(tk.Tk):
 
 
 
-
 def main():
     test = ToDo()
     test.check_file()
@@ -159,4 +269,3 @@ def main():
     test.mainloop()
 
         
-
