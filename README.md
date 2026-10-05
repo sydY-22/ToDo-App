@@ -15,4 +15,7 @@ Is to help increase productivity, organizing and completing daily goals.
 # Demo:
 ![ToDo Demo](images/todo-gif-2.gif)
 
+# Built-in Reminders:
+![picture of reminders](images/add-reminders.png)
+
 
