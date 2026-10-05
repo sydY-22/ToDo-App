@@ -5,6 +5,7 @@ from tkinter import messagebox
 import os
 import base64
 import datetime
+from datetime import timedelta, datetime
 from email.mime.text import MIMEText
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -210,6 +211,20 @@ class ToDo(tk.Tk):
 
         except HttpError as error:
             print(f"An error occurred: {error}")
+    
+    def schedule_reminder(self, to_email, subject, body):
+        """Schedule a time to send reminder."""
+        scheduler = BlockingScheduler()
+        current_time = datetime.now()
+
+        tomorrow = current_time + timedelta(days=1)
+
+        print(f"Scheduler active. Email queued for execution at: {tomorrow}!")
+        scheduler.add_job(self.send_raw_email, 
+                          'date', run_date=tomorrow, kwargs={'to_email': to_email, 'subject': subject, 'body': body})
+
+        # starts execution loop
+        scheduler.start()
 
     def on_click(self, event):
         """Gets the selected item on click."""
@@ -223,7 +238,7 @@ class ToDo(tk.Tk):
             index = selection[0]
             value = widget.get(index) # get string value
             value_ls = value.split("-")
-            subject = value_ls[0]
+            subject = f"Reminder!: {value_ls[0]}"
             body = value_ls[1]
             to_email = 'sbabb131@gmail.com'
 
@@ -232,6 +247,7 @@ class ToDo(tk.Tk):
             if self.show_confirmation(value):
                 print("Send Reminder!")
                 self.send_raw_email(to_email=to_email, subject=subject, body=body)
+                # self.schedule_reminder(to_email=to_email, subject=subject, body=body)
                 # print(self.get_gmail_service)
             else:
                 print("Do NOT send Reminder!")
